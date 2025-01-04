@@ -1,0 +1,21 @@
+0000:0000   |---------------------------|
+0000:0600   |   relocated MBR loader    |           Don't overwrite until it is saved by main kernel
+0000:07ff   |---------------------------|
+0000:7c00   |   Stage 1 bootloader      |
+0000:7dff   |---------------------------|
+0000:7e00   |   Fat Table / Stage2      |
+0000:be00   |---------------------------|
+
+
+0x00000600 >> 0x000007ff    |   Relocated MBR loader    |
+
+0x00007c00 >> 0x00007dff    |   Stage 1 bootloader      |
+0x00007e00 >> 0x0000be00    |   Partition Directory     |
+
+0x000b0000 >> 0x000b7fff    |   Frame Buffer B/W        |
+0x000b8000 >> 0x000bfd00    |   Frame buffer Colour     |
+
+0x00100000                  |   Main Kernel             |
+
+
+
