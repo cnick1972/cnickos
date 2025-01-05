@@ -1,6 +1,8 @@
 #include "stdio.h"
 #include "x86.h"
 #include "memory.h"
+
+#include "../libs/bootparams.h"
 #include <stdint.h>
 
 typedef struct {
@@ -84,7 +86,7 @@ typedef struct {
 
 uint8_t* Kernel = (uint8_t*)0x00100000;
 
-typedef void (*KernelStart)(uint16_t bootDrive);
+typedef void (*KernelStart)(BootParams* bootParams);
 
 void __attribute__((cdecl)) start(uint16_t bootDrive)
 {
@@ -231,9 +233,13 @@ void __attribute__((cdecl)) start(uint16_t bootDrive)
     }
 
  //   relocate kernel to correct location
+    BootParams params;
+
+    params.BootDevice = bootDrive;
+
     memcpy((void*)0x100000, (void*)0x60000, kernelSize);
     KernelStart kernelStart = (KernelStart)Kernel;
-    kernelStart(bootDrive);
+    kernelStart(&params);
 
 
 

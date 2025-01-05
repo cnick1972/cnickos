@@ -2,9 +2,11 @@
 #include <stdio.h>
 #include <cpuid.h>
 #include <arch/x86/io.h>
+#include <arch/x86/irq.h>
 #include <hal/hal.h>
 
 #include "memory.h"
+#include "../libs/bootparams.h"
 
 
 extern uint8_t __bss_start;
@@ -23,14 +25,20 @@ static int get_model(model* pModel)
     return 0;
 }
 
+void timer(Registers* regs)
+{
+    //printf(".");
+}
+
 char* buffer = (char*)0xb8000;
 
-void __attribute__((section(".entry"))) start(uint16_t bootDrive)
+void __attribute__((section(".entry"))) start(BootParams* params)
 {
     memset(&__bss_start, 0, (&__end) - (&__bss_start));
     clrscr();
 
     HAL_Initialize();
+    x86_IRQ_RegisterHandler(0, timer);
 
     char buffer[13] = "Unknown\0";
     
