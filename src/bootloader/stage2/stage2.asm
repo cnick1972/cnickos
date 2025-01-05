@@ -20,16 +20,6 @@ entry:
     mov sp, 0xFFF0
     mov bp, sp
 
-    ; ***** To Do ********
-    ; get memory information
-    ;
-    ; ********************
-
-
-    mov ax, 0x4f00
-    mov di, vbe_info_structure
-    int 0x10
-
 
     ; switch to protected mode
     call EnableA20          ; 2 - Enable A20 gate
@@ -179,8 +169,5 @@ g_GDTDesc:  dw g_GDTDesc - g_GDT - 1    ; limit = size of GDT
 
 g_BootDrive: db 0
 
-vbe_info_structure:
-    .signature      db "VBE2"
-    .table_data     resb 512 - 4
 
 
