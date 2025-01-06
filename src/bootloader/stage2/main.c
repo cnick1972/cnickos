@@ -1,6 +1,7 @@
 #include "stdio.h"
 #include "x86.h"
 #include "memory.h"
+#include "memdetect.h"
 
 #include "../libs/bootparams.h"
 #include <stdint.h>
@@ -223,7 +224,7 @@ void __attribute__((cdecl)) start(uint16_t bootDrive)
                 printf("NextLBA 0x%x\n", nextLBA);
                 dap.startingBlock = nextLBA;
                 dap.bufferOffset += 0x2000;
-                if(dap.bufferOffset == 0) //we have wrapped round, increase the segment;
+                if(dap.bufferOffset == 0) //we have wrapped round, increase the segment, at present we can only go up 1 whole segment, giving a max kernel of 128K;
                     dap.BufferSegment += 0x1000;
                 dap.NumberOfBlocks = pBPB->SectorsPerCluster;
             }   
@@ -238,6 +239,8 @@ void __attribute__((cdecl)) start(uint16_t bootDrive)
     params.BootDevice = bootDrive;
 
     memcpy((void*)0x100000, (void*)0x60000, kernelSize);
+    MemoryDetect(&params.Memory);
+
     KernelStart kernelStart = (KernelStart)Kernel;
     kernelStart(&params);
 

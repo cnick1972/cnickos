@@ -4,7 +4,7 @@
 
 typedef struct {
     uint64_t Begin, Length;
-    uint32_t type;
+    uint32_t Type;
     uint32_t ACPI;
 } MemoryRegion;
 
