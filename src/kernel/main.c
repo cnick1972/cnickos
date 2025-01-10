@@ -14,6 +14,14 @@ extern uint8_t __bss_start;
 extern uint8_t __end;
 
 typedef struct {
+ char Signature[8];
+ uint8_t Checksum;
+ char OEMID[6];
+ uint8_t Revision;
+ uint32_t RsdtAddress;
+} __attribute__ ((packed))RSDP_t;
+
+typedef struct {
     uint32_t ebx;
     uint32_t edx;
     uint32_t ecx;
@@ -68,6 +76,8 @@ void __attribute__((section(".entry"))) start(BootParams* params)
     char point[8] = "RSD PTR ";
     char* mem = (char*)0xe0000;
 
+    RSDP_t* pRSDP;
+
     for(uint32_t t = 0; t < 0x1ffff; t += 8)
     {
         if(memcmp(point, mem + t, 8)) {
@@ -76,8 +86,11 @@ void __attribute__((section(".entry"))) start(BootParams* params)
         else
         {
             printf("Match Found at 0x%08x\n", mem + t);
+            pRSDP = (RSDP_t*)(mem + t);
         }
     }
+
+    printf("Signature %s, RSDT Address 0x%08x\n", pRSDP->Signature, pRSDP->RsdtAddress);
 
 end:
     for(;;);
