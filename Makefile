@@ -1,6 +1,7 @@
 CC			:= clang
 LD 			:= ld.lld
 ASM 		:= nasm
+MAKE		:= make
 
 BUILDDIR    := ./build
 MBRBIR      := ./src/bootloader/mbr
@@ -22,7 +23,7 @@ all: $(BUILDDIR)/mbr.bin $(BUILDDIR)/stage1.bin $(BUILDDIR)/stage2.bin $(BUILDDI
 	@dd if=$(BUILDDIR)/mbr.bin of=image/os.img conv=notrunc >/dev/null 2>&1
 	@dd if=$(BUILDDIR)/stage1.bin of=image/os.img seek=2048 conv=notrunc >/dev/null 2>&1
 	@mcopy -o $(BUILDDIR)/stage2.bin c:
-	@mcopy -o $(BUILDDIR)/kernel.bin c:
+	@mcopy -o $(BUILDDIR)/kernel/kernel.bin c:
 
 $(BUILDDIR)/mbr.bin: $(MBRBIR)/mbr.asm
 	@echo "ASM " $<
@@ -39,8 +40,7 @@ $(BUILDDIR)/stage2.bin: $(STAGE2_OBJS)
 	@ld.lld -T $(STAGE2DIR)/linker.ld $(LINKFLAGS) -Map=$(BUILDDIR)/stage2.map -o $@ $(STAGE2_OBJS) -lgcc
 
 $(BUILDDIR)/kernel.bin: $(KERNEL_OBJS)
-	@echo "LD  " $@
-	@ld.lld -T $(KERNELDIR)/linker.ld $(LINKFLAGS) -Map=$(BUILDDIR)/kernel.map -o $@ $(KERNEL_OBJS) -lgcc
+	$(MAKE) -C src/kernel
 
 $(BUILDDIR)/%.c.o: %.c
 	@echo "CC  " $<

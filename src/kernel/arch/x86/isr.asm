@@ -23,7 +23,7 @@ x86_ISR%1:
 
 %endmacro
 
-%include "src/kernel/arch/x86/isrs_gen.inc"
+%include "/home/chris/cnickos/src/kernel/arch/x86/isrs_gen.inc"
 
 isr_common:
     pusha               ; pushes in order: eax, ecx, edx, ebx, esp, ebp, esi, edi
