@@ -71,9 +71,6 @@ void __attribute__((section(".entry"))) start(BootParams* params)
     printf("pmm regions initialzed: %d allocation blocks; used or reserved blocks: %d\nFree blocks: %d\n",
                     pmm_get_block_count(), pmm_get_use_block_count(), pmm_get_free_block_count());
 
-    printf("Memory Low: 0x%08x\n", params->Memory.memoryLO);
-    printf("Memory High: 0x%08x\n", params->Memory.memoryHI);
-
     char point[8] = "RSD PTR ";
     char* mem = (char*)0xe0000;
 
