@@ -57,9 +57,9 @@ void __attribute__((section(".entry"))) start(BootParams* params)
 
     printf("Memory regions count: %d\n", params->Memory.RegionCount);
     for(int i = 0; i < params->Memory.RegionCount; i++) {
-        printf("MEM: region=%x\tstart=0x%llx\tlength=0x%llx\ttype=%x\n", i,
-                                                                      params->Memory.Regions[i].Begin,
-                                                                      params->Memory.Regions[i].Length,
+        printf("MEM: region=%d start=0x%08x length=0x%08x type=%d\n", i,
+                                                                      (uint32_t)params->Memory.Regions[i].Begin,
+                                                                      (uint32_t)params->Memory.Regions[i].Length,
                                                                       params->Memory.Regions[i].Type);
 
 
@@ -75,7 +75,7 @@ void __attribute__((section(".entry"))) start(BootParams* params)
         }
         else
         {
-            printf("Match Found at 0x%x\n", mem + t);
+            printf("Match Found at 0x%08x\n", mem + t);
         }
     }
 
