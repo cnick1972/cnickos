@@ -152,7 +152,63 @@ x86_Disk_Read_LBA:
     pop ebp
 
     ret
+;
+; int ASMCALL x86_GetBiosMemory64(Memory* mem);
+;
+global x86_GetBiosMemory64
+x86_GetBiosMemory64:
 
+    ; make new call frame
+    push ebp             ; save old call frame
+    mov ebp, esp          ; initialize new call frame
+
+    x86_EnterRealMode
+
+        ; save modified regs
+    push ebx
+    push ecx
+    push edx
+    push esi
+    push edi
+    push ds
+    push es
+
+    xor eax, eax
+    xor ebx, ebx
+    
+    LinearToSegOffset [bp + 8], es, edi, di
+    LinearToSegOffset [bp + 12], ds, esi, si
+
+    mov ax, 0xe801
+    int 0x15
+
+
+    mov es:[di], ax
+    mov ds:[si], bx
+
+    mov eax, 0
+        ; restore regs
+    pop es
+    pop ds
+    pop edi
+    pop esi
+    pop edx
+    pop ecx
+    pop ebx
+
+
+    push eax
+
+    x86_EnterProtectedMode
+
+    pop eax
+
+    ; restore old call frame
+    mov esp, ebp
+    pop ebp
+    ret
+
+    
 ;
 ; int ASMCALL x86_E820GetNextBlock(E820MemoryBlock* block, uint32_t* continuationId);
 ;

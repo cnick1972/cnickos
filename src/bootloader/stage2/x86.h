@@ -2,11 +2,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-void __attribute__((cdecl)) x86_outb(uint16_t port, uint8_t value);
-uint8_t __attribute__((cdecl)) x86_inb(uint16_t port);
-
-
-bool __attribute__((cdecl)) x86_Disk_Reset(uint8_t drive);
+#define ASMCALL __attribute__((cdecl))
 
 typedef struct {
     uint8_t     size;
@@ -16,10 +12,6 @@ typedef struct {
     uint16_t    BufferSegment;
     uint64_t    startingBlock;
 } __attribute__((packed)) DAP;
-
-
-bool __attribute__((cdecl)) x86_Disk_Read_LBA(uint8_t drive,
-                                              DAP* dap);
 
 typedef struct {
     uint64_t Base;
@@ -37,4 +29,9 @@ enum E820MemoryBlockType
     E820_BAD_MEMORY         = 5,
 };
 
-int __attribute__((cdecl)) x86_E820GetNextBlock(E820MemoryBlock* block, uint32_t* continuationId);
+bool    ASMCALL x86_Disk_Read_LBA(uint8_t drive, DAP* dap);
+void    ASMCALL x86_outb(uint16_t port, uint8_t value);
+uint8_t ASMCALL x86_inb(uint16_t port);
+bool    ASMCALL x86_Disk_Reset(uint8_t drive);
+int     ASMCALL x86_E820GetNextBlock(E820MemoryBlock* block, uint32_t* continuationId);
+int     ASMCALL x86_GetBiosMemory64(uint16_t* lo, uint16_t* hi);

@@ -150,8 +150,9 @@ void __attribute__((cdecl)) start(uint16_t bootDrive)
 
         
         if(x86_Disk_Read_LBA(bootDrive, &dap))
-            printf("Success\n");
-
+        {
+            
+        }
     }
 
 // Fat is now loaded, next load the directory this is located immediatly after the fat

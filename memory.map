@@ -17,5 +17,8 @@
 
 0x00100000                  |   Main Kernel             |
 
+0x00200000                  |   PMM Bitmap              |       I want to relocate this to after the kernel
+
+
 
 

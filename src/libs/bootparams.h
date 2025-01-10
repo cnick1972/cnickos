@@ -11,6 +11,8 @@ typedef struct {
 typedef struct {
     int RegionCount;
     MemoryRegion* Regions;
+    uint16_t memoryLO;
+    uint16_t memoryHI;
 } MemoryInfo;
 
 typedef struct {
