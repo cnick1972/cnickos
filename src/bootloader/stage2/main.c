@@ -237,6 +237,7 @@ void __attribute__((cdecl)) start(uint16_t bootDrive)
  //   relocate kernel to correct location
     BootParams params;
 
+    params.kernelSize = kernelSize;
     params.BootDevice = bootDrive;
 
     memcpy((void*)0x100000, (void*)0x60000, kernelSize);

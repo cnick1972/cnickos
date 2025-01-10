@@ -4,13 +4,13 @@
 #include <cpuid.h>
 #include <arch/x86/io.h>
 #include <arch/x86/irq.h>
+#include <arch/x86/pmm.h>
 #include <hal/hal.h>
 
 
 
 #include "memory.h"
 #include "../libs/bootparams.h"
-
 
 extern uint8_t __bss_start;
 extern uint8_t __end;
@@ -51,19 +51,10 @@ void __attribute__((section(".entry"))) start(BootParams* params)
     HAL_Initialize();
     x86_IRQ_RegisterHandler(0, timer);
 
-    char buffer[13] = "Unknown\0";
-    
-    if(x86_cpuid()) {
-        model myModel;
-        get_model(&myModel);
+// initialize PMM
 
-        memset(&buffer, 0, 13);
-        memcpy(buffer, &myModel, 12);
-    }
-
-    printf("Welcome to the kernel\n");
-    printf("CPU Model: %s\n", buffer);
-    printf("Boot drive: 0x%x\n", params->BootDevice);
+    uint32_t memSize = 1024 + params->Memory.memoryLO +params->Memory.memoryHI * 64;
+    pmm_init(memSize, (uint32_t*)&__end);
 
     printf("Memory regions count: %d\n", params->Memory.RegionCount);
     for(int i = 0; i < params->Memory.RegionCount; i++) {
@@ -72,8 +63,13 @@ void __attribute__((section(".entry"))) start(BootParams* params)
                                                                       (uint32_t)params->Memory.Regions[i].Length,
                                                                       params->Memory.Regions[i].Type);
 
+        if(params->Memory.Regions[i].Type == 1)
+            pmm_init_region(params->Memory.Regions[i].Begin, params->Memory.Regions[i].Length);
 
     }
+    pmm_deinit_region(0x100000, params->kernelSize + pmm_get_block_count() * 8);
+    printf("pmm regions initialzed: %d allocation blocks; used or reserved blocks: %d\nFree blocks: %d\n",
+                    pmm_get_block_count(), pmm_get_use_block_count(), pmm_get_free_block_count());
 
     printf("Memory Low: 0x%08x\n", params->Memory.memoryLO);
     printf("Memory High: 0x%08x\n", params->Memory.memoryHI);
