@@ -6,6 +6,10 @@
 
 typedef	uint32_t physical_addr;
 
+inline void mmap_set(int bit);
+inline void mmap_unset(int bit);
+inline bool mmap_test(int bit);
+
 void pmm_init(size_t memSize, physical_addr* bitmap);
 void pmm_init_region(physical_addr base, size_t size);
 void pmm_deinit_region(physical_addr base, size_t size);

@@ -24,24 +24,24 @@ static	uint32_t	_mmngr_max_blocks = 0;
 static	uint32_t*	_mmngr_memory_map = 0;
 
 //! set any bit (frame) within the memory map bit array
-void mmap_set (int bit) {
+void mmap_set(int bit) {
 
   _mmngr_memory_map[bit / 32] |= (1 << (bit % 32));
 }
 
 //! unset any bit (frame) within the memory map bit array
-void mmap_unset (int bit) {
+void mmap_unset(int bit) {
 
   _mmngr_memory_map[bit / 32] &= ~ (1 << (bit % 32));
 }
 
-bool mmap_test (int bit) {
+bool mmap_test(int bit) {
 
 	return _mmngr_memory_map[bit / 32] &  (1 << (bit % 32));
 }
 
 
-int mmap_first_free () {
+int mmap_first_free() {
 
 	//! find the first free bit
 	for (uint32_t i=0; i< pmm_get_block_count() /32; i++)
@@ -56,7 +56,7 @@ int mmap_first_free () {
 	return -1;
 }
 
-int mmap_first_free_s (size_t size) {
+int mmap_first_free_s(size_t size) {
 
 	if (size==0)
 		return -1;
