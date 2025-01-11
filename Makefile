@@ -22,7 +22,7 @@ all: $(BUILDDIR)/mbr.bin $(BUILDDIR)/stage1.bin $(BUILDDIR)/stage2.bin $(BUILDDI
 	@echo "Building disk image"
 	@dd if=$(BUILDDIR)/mbr.bin of=image/os.img conv=notrunc >/dev/null 2>&1
 	@dd if=$(BUILDDIR)/stage1.bin of=image/os.img seek=2048 conv=notrunc >/dev/null 2>&1
-	@mcopy -o $(BUILDDIR)/stage2.bin c:
+	@mcopy -o $(BUILDDIR)/bootloader/stage2/stage2.bin c:
 	@mcopy -o $(BUILDDIR)/kernel/kernel.bin c:
 
 $(BUILDDIR)/mbr.bin: $(MBRBIR)/mbr.asm
@@ -35,22 +35,11 @@ $(BUILDDIR)/stage1.bin: $(STAGE1DIR)/stage1.asm
 	@mkdir -p $(BUILDDIR)
 	@$(ASM) -f bin -o $@ $<
 
-$(BUILDDIR)/stage2.bin: $(STAGE2_OBJS)
-	@echo "LD  " $@
-	@ld.lld -T $(STAGE2DIR)/linker.ld $(LINKFLAGS) -Map=$(BUILDDIR)/stage2.map -o $@ $(STAGE2_OBJS) -lgcc
+$(BUILDDIR)/stage2.bin:
+	$(MAKE) -C src/bootloader/stage2
 
-$(BUILDDIR)/kernel.bin: $(KERNEL_OBJS)
+$(BUILDDIR)/kernel.bin:
 	$(MAKE) -C src/kernel
-
-$(BUILDDIR)/%.c.o: %.c
-	@echo "CC  " $<
-	@mkdir -p $(dir $@)
-	@$(CC) $(CCFLAGS) -o $@ $<
-
-$(BUILDDIR)/%.asm.o: %.asm
-	@echo "ASM " $<
-	@mkdir -p $(dir $@)
-	@$(ASM) $< -f elf -o $@
 
 .PHONY: build clean
 

@@ -3,7 +3,7 @@ LD 			:= ld.lld
 ASM 		:= nasm
 
 CCFLAGS := -std=c99 -c -ffreestanding -target i686-none-elf -I. -I../src/libs
-LINKFLAGS := -L. -L/home/chris/cnickos/ -nostdlib --oformat binary
+LINKFLAGS := -L. -L/home/chris-nicholson/cnickos/ -nostdlib --oformat binary
 
 BUILD_DIR := ../../build/kernel
 
@@ -25,4 +25,4 @@ $(BUILD_DIR)/%.c.o: %.c
 $(BUILD_DIR)/%.asm.o: %.asm
 	@echo "ASM " $<
 	@mkdir -p $(dir $@)
-	@$(ASM) $< -f elf -o $@
+	@$(ASM) $< -I$(shell pwd)/arch/x86/ -f elf -o $@
