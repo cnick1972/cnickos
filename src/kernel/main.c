@@ -7,8 +7,6 @@
 #include <arch/x86/pmm.h>
 #include <hal/hal.h>
 
-
-
 #include "memory.h"
 #include "../libs/bootparams.h"
 
@@ -68,7 +66,7 @@ void __attribute__((section(".entry"))) start(BootParams* params)
 
     }
     pmm_deinit_region(0x100000, params->kernelSize + pmm_get_block_count() * 8);
-    printf("pmm regions initialzed: %d allocation blocks; used or reserved blocks: %d\nFree blocks: %d\n",
+    printf("pmm regions initialzed: %d allocation blocks: used or reserved blocks: %d\nFree blocks: %d\n",
                     pmm_get_block_count(), pmm_get_use_block_count(), pmm_get_free_block_count());
 
     char point[8] = "RSD PTR ";
