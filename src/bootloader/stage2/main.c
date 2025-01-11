@@ -3,7 +3,7 @@
 #include "memory.h"
 #include "memdetect.h"
 
-#include "../libs/bootparams.h"
+#include "../../libs/bootparams.h"
 #include <stdint.h>
 
 typedef struct {
