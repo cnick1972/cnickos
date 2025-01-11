@@ -52,7 +52,10 @@ $(BUILDDIR)/%.asm.o: %.asm
 	@mkdir -p $(dir $@)
 	@$(ASM) $< -f elf -o $@
 
-.PHONY: build clean
+.PHONY: build clean test
+
+test:
+	@qemu-system-i386 -drive file=image/os.img,index=0,media=disk,format=raw
 
 clean:
 	rm -rfv ./build
