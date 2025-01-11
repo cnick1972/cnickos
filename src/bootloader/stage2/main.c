@@ -204,6 +204,8 @@ void __attribute__((cdecl)) start(uint16_t bootDrive)
         dap.BufferSegment = 0x6000;
         dap.bufferOffset = 0x0000;
 
+        int count = 0;
+
         while(!finished)
         {
             x86_Disk_Read_LBA(bootDrive, &dap);
@@ -224,13 +226,13 @@ void __attribute__((cdecl)) start(uint16_t bootDrive)
                 nextLBA += pMBR->part[activePartition].LBAStart;
                 printf("NextLBA 0x%x\n", nextLBA);
                 dap.startingBlock = nextLBA;
-                dap.bufferOffset += 0x2000;
-                if(dap.bufferOffset == 0) //we have wrapped round, increase the segment, at present we can only go up 1 whole segment, giving a max kernel of 128K;
-                    dap.BufferSegment += 0x1000;
                 dap.NumberOfBlocks = pBPB->SectorsPerCluster;
             }   
             printf("0x%x 0x%x 0x%x\n", recordCluster, recordBlock, recordEntry);
             printf("0x%x\n", kernelCluster);
+
+            memcpy((void*)0x100000 + (count * 0x2000), (void*)0x60000, 0x2000);
+            count++;
         }
     }
 
@@ -240,7 +242,6 @@ void __attribute__((cdecl)) start(uint16_t bootDrive)
     params.kernelSize = kernelSize;
     params.BootDevice = bootDrive;
 
-    memcpy((void*)0x100000, (void*)0x60000, kernelSize);
     MemoryDetect(&params.Memory);
 
     KernelStart kernelStart = (KernelStart)Kernel;
