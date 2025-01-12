@@ -5,6 +5,7 @@
 #include <arch/x86/io.h>
 #include <arch/x86/irq.h>
 #include <arch/x86/pmm.h>
+#include <arch/x86/paging.h>
 #include <hal/hal.h>
 
 #include "memory.h"
@@ -61,7 +62,7 @@ void __attribute__((section(".entry"))) start(BootParams* params)
                                                                       (uint32_t)params->Memory.Regions[i].Length,
                                                                       params->Memory.Regions[i].Type);
 
-        if(params->Memory.Regions[i].Type == 1)
+        if((params->Memory.Regions[i].Type == 1) && (params->Memory.Regions[i].Begin >= 0x100000))
             pmm_init_region(params->Memory.Regions[i].Begin, params->Memory.Regions[i].Length);
 
     }
@@ -89,6 +90,12 @@ void __attribute__((section(".entry"))) start(BootParams* params)
     printf("Signature %s, RSDT Address 0x%08x\n", pRSDP->Signature, pRSDP->RsdtAddress);
 
     printf("__end is at location: 0x%08x\n", &__end);
+
+    uint32_t *p = pmm_alloc_block();
+
+    printf("Page allocated: 0x%08x, value 0x%08x\n", p, p[0]);
+    printf("Page Directory at 0x%08x\n", GetCurrentPageDirectory());
+    relocatePageDirectory(p);
 
 end:
     for(;;);

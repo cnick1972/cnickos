@@ -256,7 +256,7 @@ void __attribute__((cdecl)) start(uint16_t bootDrive)
 
         for(i = 0; i < 1024; i++)
     {
-        kernel_page_table[i] = ((i + 1) * 0x100000) | 3;
+        kernel_page_table[i] = (0x100000 + (i * 0x1000)) | 3;
     }
 
     page_directory[0] = ((uint32_t)first_page_table | 3);
@@ -281,8 +281,6 @@ void __attribute__((cdecl)) start(uint16_t bootDrive)
 
     KernelStart kernelStart = (KernelStart)Kernel;
     kernelStart(&params);
-
-
 
 end:
     goto end;
