@@ -2,6 +2,7 @@
 #include "x86.h"
 #include "memory.h"
 #include "memdetect.h"
+#include "paging.h"
 
 #include "../../libs/bootparams.h"
 #include <stdint.h>
@@ -85,7 +86,12 @@ typedef struct {
 
 */
 
-uint8_t* Kernel = (uint8_t*)0x00100000;
+uint32_t page_directory[1024] __attribute__((aligned(4096)));
+uint32_t first_page_table[1024] __attribute__((aligned(4096)));
+uint32_t kernel_page_table[1024] __attribute__((aligned(4096)));
+
+
+uint8_t* Kernel = (uint8_t*)0xc0000000;
 
 typedef void (*KernelStart)(BootParams* bootParams);
 
@@ -231,10 +237,39 @@ void __attribute__((cdecl)) start(uint16_t bootDrive)
             printf("0x%x 0x%x 0x%x\n", recordCluster, recordBlock, recordEntry);
             printf("0x%x\n", kernelCluster);
 
-            memcpy((void*)0x100000 + (count * 0x2000), (void*)0x60000, 0x2000);
+            memcpy((void*)0x10000 + (count * 0x2000), (void*)0x60000, 0x2000);
             count++;
         }
     }
+
+    
+    int i;
+    for(i = 0; i < 1024; i++)
+    {
+        page_directory[i] = 0x00000002;
+    }
+
+    for(i = 0; i < 1024; i++)
+    {
+        first_page_table[i] = (i * 0x1000) | 3;
+    }
+
+        for(i = 0; i < 1024; i++)
+    {
+        kernel_page_table[i] = ((i + 1) * 0x100000) | 3;
+    }
+
+    page_directory[0] = ((uint32_t)first_page_table | 3);
+    page_directory[768] = ((uint32_t)kernel_page_table | 3);
+
+    
+    LoadPageDirectory(page_directory);
+    enablePaging();
+
+    printf("Paging\n");
+
+    memcpy((void*)0xc0000000, (void*)0x10000, kernelSize);
+
 
  //   relocate kernel to correct location
     BootParams params;

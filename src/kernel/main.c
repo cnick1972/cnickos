@@ -88,6 +88,8 @@ void __attribute__((section(".entry"))) start(BootParams* params)
 
     printf("Signature %s, RSDT Address 0x%08x\n", pRSDP->Signature, pRSDP->RsdtAddress);
 
+    printf("__end is at location: 0x%08x\n", &__end);
+
 end:
     for(;;);
 }

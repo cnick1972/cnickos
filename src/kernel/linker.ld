@@ -1,5 +1,5 @@
 ENTRY(start)
-phys = 0x00100000;
+phys = 0xc0000000;
 
 SECTIONS
 {
