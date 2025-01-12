@@ -1,8 +1,8 @@
 #include "hal.h"
-#include <arch/x86/gdt.h>
-#include <arch/x86/idt.h>
-#include <arch/x86/isr.h>
-#include <arch/x86/irq.h>
+#include <gdt.h>
+#include <idt.h>
+#include <isr.h>
+#include <irq.h>
 
 void HAL_Initialize()
 {

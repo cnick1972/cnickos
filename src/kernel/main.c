@@ -2,10 +2,10 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <cpuid.h>
-#include <arch/x86/io.h>
-#include <arch/x86/irq.h>
-#include <arch/x86/pmm.h>
-#include <arch/x86/paging.h>
+#include <io.h>
+#include <irq.h>
+#include <pmm.h>
+#include <paging.h>
 #include <hal/hal.h>
 
 #include "memory.h"

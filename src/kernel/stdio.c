@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <arch/x86/io.h>
+#include <io.h>
 
 #include <stdarg.h>
 #include <stddef.h>
