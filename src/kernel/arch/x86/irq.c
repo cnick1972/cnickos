@@ -1,9 +1,9 @@
-#include "irq.h"
-#include "pic.h"
-#include "io.h"
+#include <irq.h>
+#include <pic.h>
+#include <io.h>
 #include <stddef.h>
 #include "stdio.h"
-#include "isr.h"
+#include <isr.h>
 
 #define PIC_REMAP_OFFSET        0x20
 

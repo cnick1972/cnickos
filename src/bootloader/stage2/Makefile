@@ -3,7 +3,7 @@ LD 			:= ld.lld
 ASM 		:= nasm
 
 CCFLAGS := -std=c99 -c -ffreestanding -target i686-none-elf -I. -I../src/libs
-LINKFLAGS := -L. -nostdlib --oformat binary
+LINKFLAGS := -L $(shell pwd)/../../../ -nostdlib --oformat binary
 
 BUILD_DIR := ../../../build/bootloader/stage2
 

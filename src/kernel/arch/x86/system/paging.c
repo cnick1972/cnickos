@@ -1,5 +1,5 @@
-#include "paging.h"
-#include "../../memory.h"
+#include <paging.h>
+#include <memory.h>
 
 void relocatePageDirectory(uint32_t* newLocation)
 {

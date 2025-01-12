@@ -1,5 +1,5 @@
-#include "pmm.h"
-#include "../../memory.h"
+#include <pmm.h>
+#include <memory.h>
 
 //! 8 blocks per byte
 #define PMMNGR_BLOCKS_PER_BYTE 8

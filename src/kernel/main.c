@@ -11,6 +11,8 @@
 #include "memory.h"
 #include "../libs/bootparams.h"
 
+extern void _init();
+
 extern uint8_t __bss_start;
 extern uint8_t __end;
 
